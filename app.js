@@ -21,6 +21,10 @@ const articleSchema = new mongoose.Schema({
 
 const Article = mongoose.model("Article", articleSchema);
 
+app.get("/", (req,res) => {
+  res.redirect("/articles");
+})
+
 
 app.get("/articles", (req,res)=>{
   Article.find({}, (error,foundArticle) => {
@@ -31,10 +35,28 @@ app.get("/articles", (req,res)=>{
     }
   })
 })
+app.post("/articles", (req, res) => {
+  console.log(req.body.title);
+  console.log(req.body.content);
 
+  const newArticle = new Article({
+    title: req.body.title,
+    content: req.body.content
+  });
+  newArticle.save((err)=>{
+    if(err){
+      res.send(err);
+    }else {
+      res.send("Successfully added a new article.");
+    }
+  });
+  
+
+})
 
 
 
 app.listen(3000, ()=>{
   console.log("server is running on port 3000");
 })
+
